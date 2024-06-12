@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>神魔技能搜尋器 - 閱讀回饋</title>
+  <link rel="stylesheet" href="style.css"> <!-- Link to external CSS file -->
+</head>
+
+<body>
+  <div class="mainText">
+
+    <div class="header">
+      <div class="left">
+        <img src="images/ourlogo.png" alt="Logo" id="logo">
+        <h1>神魔技能搜尋器 - 閱讀回饋</h1>
+      </div>
+      <div class="right">
+        <button class="defaultButton" role="button" onclick="window.location.href='index.html'">返回首頁</button>
+        <button id="logoutButton" onclick="logout()" style="display: none;">登出</button> <!-- Logout button -->
+
+        <div id="greeting">你好，<span id="usernameDisplay"></span></div>
+      </div>
+    </div>
+
+    <br><br><br><br><br><br><br>
+    <div class="feedbacks" id="feedbackMessage">
+    </div>
+
+    <div class="footer">
+      <p>Developed by Buffett, Panda, IFIF, bbeafvy</p>
+      <p><a href="https://tos.fandom.com/zh/wiki/%E4%B8%BB%E5%8B%95%E6%8A%80%E5%88%97%E8%A1%A8">Resources</a> | <a
+          href="https://github.com/Buffett111">GitHub</a></p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+  <script>
+    // Fetch and display session user info
+
+    document.addEventListener("DOMContentLoaded", function () {
+      fetch('/check-session')
+        .then(response => response.json())
+        .then(data => {
+          if (data.loggedIn) {
+            document.getElementById("greeting").textContent = `你好，${data.nickname}`;
+          }
+        });
+    });
+
+
+    function submitFeedback(event) {
+      fetch(`/searchFeedback`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.success) {
+            var feedbackDiv = document.getElementById("feedbackMessage");
+            // console.log("feedback:");
+            // console.log(data.feedback);
+            content = ""
+            for (var i = 0; i < data.feedback.length; ++i) {
+              var div = "<div class='feedback'>"
+              div = div + '<p><strong>用戶名: </strong>' + data.feedback[i].nickname + '</p>'
+              div = div + '<p><strong>主題: </strong>' + data.feedback[i].subject + '</p>'
+              div = div + '<p><strong>提交時間: </strong>' + data.feedback[i].time + '</p>'
+              div = div + '<p><strong>內容: </strong>' + data.feedback[i].content + '</p>'
+
+              div = div + "</div>"
+              content = content + div;
+            }
+            feedbackDiv.innerHTML = content;
+            // feedbackDiv.innerText = data.toString();
+          } else {
+            console.error(data.message);
+          }
+        })
+        .catch((error) => {
+          console.error(
+            "There has been a problem with your fetch operation:",
+            error
+          );
+        });
+    }
+    // Call the functions on page load
+    window.onload = function () {
+      // fetchSessionInfo();
+      submitFeedback();
+    }
+  </script>
+
+</body>
+
+</html>

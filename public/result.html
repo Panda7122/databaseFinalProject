@@ -1,0 +1,41 @@
+<!-- result.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜尋結果</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="resultStyle.css">
+</head>
+
+<body class="result-page">
+
+    <div class="header">
+        <h1>搜尋結果</h1>
+    </div>
+    <div class="mainText">
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+        <button class="coolButton" role="button" onclick="window.location.href='index.html'">回到首頁</button>
+
+        <div id="results"></div>
+        <div id="fixedBoard" style="display: none; position: absolute;z-index: 1;" onmouseleave="clearBoard()"> </div>
+
+        <script src="script.js"></script>
+        <script src="result.js"></script>
+        <script src="board.js"></script>
+    </div>
+
+</body>
+
+</html>

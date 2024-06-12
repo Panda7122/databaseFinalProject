@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>神魔主動技搜尋器</title>
+  <link rel="stylesheet" href="style.css"> <!-- Link to external CSS file -->
+</head>
+<div class="mainText">
+
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div class="header">
+    <div class="left">
+      <img src="images/ourlogo.png" alt="Logo" id="logo">
+      <h1>神魔技能搜尋器</h1>
+    </div>
+    <div class="right">
+
+      <!-- <button class="defaultButton" role="button" id="manageCardsButton" onclick="manageCards()"
+
+        style=" display: none;">管理卡片</button>
+      Manage Cards button -->
+      <button class="defaultButton" role="button" id="readFeedbackButton" onclick="readFeedback()"
+        style=" display: none;">閱讀回饋</button>
+      <!-- Read Feedback button -->
+      <button class="defaultButton" role="button" id="feedbackButton" onclick="feedback()"
+        style="display: none;">回饋撰寫</button> <!-- Feedback button -->
+      <button class="defaultButton" role="button" id="favoritesButton" onclick="favorites()"
+        style="display: none;">我的最愛</button>
+      <!-- My Favorites button -->
+      <button class="defaultButton" role="button" id="loginButton" onclick="openModal()">登入/註冊</button>
+      <!-- Login/Register button -->
+      <button class="defaultButton" role="button" id="logoutButton" onclick="logout()"
+        style="display: none;">登出</button>
+      <!-- Logout button -->
+      <div id="greeting" style="display: none;">你好，<span id="usernameDisplay"></span></div>
+    </div>
+  </div>
+
+
+
+  <div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p>登入/註冊</p>
+      <label for="username">帳號 : </label>
+      <!-- <div class="inputBox"> -->
+      <input type="text" id="username" name="username"><br>
+      <!-- </div> -->
+      <label for="password">密碼 : </label>
+      <input type="password" id="password" name="password"><br>
+      <div class="links">
+        <a href="#" onclick="forgotPassword()">忘記密碼</a>
+        <a href="#" onclick="registerAccount()">註冊帳號</a>
+      </div>
+      <button onclick="login()">登入</button>
+    </div>
+  </div>
+
+  <!-- 註冊模態框 -->
+  <div id="registerModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeRegisterModal()">×</span>
+      <p>註冊帳號</p>
+      <label for="reg_username">帳號 : </label>
+      <input type="text" id="reg_username" name="username"><br>
+      <label for="reg_password">密碼 : </label>
+      <input type="password" id="reg_password" name="password"><br>
+      <label for="reg_nickname">暱稱 : </label>
+      <input type="text" id="reg_nickname" name="nickname"><br>
+      <button onclick="register()">註冊</button>
+    </div>
+  </div>
+
+  <!-- 忘記密碼模態框 -->
+  <div id="forgotPasswordModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeForgotPasswordModal()">×</span>
+      <p>忘記密碼</p>
+      <label for="fp_username">帳號 : </label>
+      <input type="text" id="fp_username" name="username"><br>
+      <label for="fp_nickname">暱稱 : </label>
+      <input type="text" id="fp_nickname" name="nickname"><br>
+      <label for="fp_new_password">新密碼 : </label>
+      <input type="password" id="fp_new_password" name="new_password"><br>
+      <label for="fp_confirm_password">確認密碼 : </label>
+      <input type="password" id="fp_confirm_password" name="confirm_password"><br>
+      <button onclick="resetPassword()">重設密碼</button>
+    </div>
+  </div>
+
+
+
+  <div class="search-bar">
+    <div class="search">
+      <div class='inputBox'>
+        <input type="text" id="searchInput" placeholder="Enter cardID or skill">
+      </div>
+      <button class="sus" onclick="search()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="36px" height="36px">
+          <rect width="36" height="36" x="0" y="0" fill="#fdd835"></rect>
+          <path fill="#e53935"
+            d="M38.67,42H11.52C11.27,40.62,11,38.57,11,36c0-5,0-11,0-11s1.44-7.39,3.22-9.59 c1.67-2.06,2.76-3.48,6.78-4.41c3-0.7,7.13-0.23,9,1c2.15,1.42,3.37,6.67,3.81,11.29c1.49-0.3,5.21,0.2,5.5,1.28 C40.89,30.29,39.48,38.31,38.67,42z">
+          </path>
+          <path fill="#b71c1c"
+            d="M39.02,42H11.99c-0.22-2.67-0.48-7.05-0.49-12.72c0.83,4.18,1.63,9.59,6.98,9.79 c3.48,0.12,8.27,0.55,9.83-2.45c1.57-3,3.72-8.95,3.51-15.62c-0.19-5.84-1.75-8.2-2.13-8.7c0.59,0.66,3.74,4.49,4.01,11.7 c0.03,0.83,0.06,1.72,0.08,2.66c4.21-0.15,5.93,1.5,6.07,2.35C40.68,33.85,39.8,38.9,39.02,42z">
+          </path>
+          <path fill="#212121"
+            d="M35,27.17c0,3.67-0.28,11.2-0.42,14.83h-2C32.72,38.42,33,30.83,33,27.17 c0-5.54-1.46-12.65-3.55-14.02c-1.65-1.08-5.49-1.48-8.23-0.85c-3.62,0.83-4.57,1.99-6.14,3.92L15,16.32 c-1.31,1.6-2.59,6.92-3,8.96v10.8c0,2.58,0.28,4.61,0.54,5.92H10.5c-0.25-1.41-0.5-3.42-0.5-5.92l0.02-11.09 c0.15-0.77,1.55-7.63,3.43-9.94l0.08-0.09c1.65-2.03,2.96-3.63,7.25-4.61c3.28-0.76,7.67-0.25,9.77,1.13 C33.79,13.6,35,22.23,35,27.17z">
+          </path>
+          <path fill="#01579b"
+            d="M17.165,17.283c5.217-0.055,9.391,0.283,9,6.011c-0.391,5.728-8.478,5.533-9.391,5.337 c-0.913-0.196-7.826-0.043-7.696-5.337C9.209,18,13.645,17.32,17.165,17.283z">
+          </path>
+          <path fill="#212121"
+            d="M40.739,37.38c-0.28,1.99-0.69,3.53-1.22,4.62h-2.43c0.25-0.19,1.13-1.11,1.67-4.9 c0.57-4-0.23-11.79-0.93-12.78c-0.4-0.4-2.63-0.8-4.37-0.89l0.1-1.99c1.04,0.05,4.53,0.31,5.71,1.49 C40.689,24.36,41.289,33.53,40.739,37.38z">
+          </path>
+          <path fill="#81d4fa"
+            d="M10.154,20.201c0.261,2.059-0.196,3.351,2.543,3.546s8.076,1.022,9.402-0.554 c1.326-1.576,1.75-4.365-0.891-5.267C19.336,17.287,12.959,16.251,10.154,20.201z">
+          </path>
+          <path fill="#212121"
+            d="M17.615,29.677c-0.502,0-0.873-0.03-1.052-0.069c-0.086-0.019-0.236-0.035-0.434-0.06 c-5.344-0.679-8.053-2.784-8.052-6.255c0.001-2.698,1.17-7.238,8.986-7.32l0.181-0.002c3.444-0.038,6.414-0.068,8.272,1.818 c1.173,1.191,1.712,3,1.647,5.53c-0.044,1.688-0.785,3.147-2.144,4.217C22.785,29.296,19.388,29.677,17.615,29.677z M17.086,17.973 c-7.006,0.074-7.008,4.023-7.008,5.321c-0.001,3.109,3.598,3.926,6.305,4.27c0.273,0.035,0.48,0.063,0.601,0.089 c0.563,0.101,4.68,0.035,6.855-1.732c0.865-0.702,1.299-1.57,1.326-2.653c0.051-1.958-0.301-3.291-1.073-4.075 c-1.262-1.281-3.834-1.255-6.825-1.222L17.086,17.973z">
+          </path>
+          <path fill="#e1f5fe"
+            d="M15.078,19.043c1.957-0.326,5.122-0.529,4.435,1.304c-0.489,1.304-7.185,2.185-7.185,0.652 C12.328,19.467,15.078,19.043,15.078,19.043z">
+          </path>
+        </svg>
+        <span class="susnow">Search</span>
+        <span class="susplay">Search</span>
+      </button>
+
+      <button class="sus" onclick="switchCon()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="36px" height="36px">
+          <rect width="36" height="36" x="0" y="0" fill="#fdd835"></rect>
+          <path fill="#e53935"
+            d="M38.67,42H11.52C11.27,40.62,11,38.57,11,36c0-5,0-11,0-11s1.44-7.39,3.22-9.59 c1.67-2.06,2.76-3.48,6.78-4.41c3-0.7,7.13-0.23,9,1c2.15,1.42,3.37,6.67,3.81,11.29c1.49-0.3,5.21,0.2,5.5,1.28 C40.89,30.29,39.48,38.31,38.67,42z">
+          </path>
+          <path fill="#b71c1c"
+            d="M39.02,42H11.99c-0.22-2.67-0.48-7.05-0.49-12.72c0.83,4.18,1.63,9.59,6.98,9.79 c3.48,0.12,8.27,0.55,9.83-2.45c1.57-3,3.72-8.95,3.51-15.62c-0.19-5.84-1.75-8.2-2.13-8.7c0.59,0.66,3.74,4.49,4.01,11.7 c0.03,0.83,0.06,1.72,0.08,2.66c4.21-0.15,5.93,1.5,6.07,2.35C40.68,33.85,39.8,38.9,39.02,42z">
+          </path>
+          <path fill="#212121"
+            d="M35,27.17c0,3.67-0.28,11.2-0.42,14.83h-2C32.72,38.42,33,30.83,33,27.17 c0-5.54-1.46-12.65-3.55-14.02c-1.65-1.08-5.49-1.48-8.23-0.85c-3.62,0.83-4.57,1.99-6.14,3.92L15,16.32 c-1.31,1.6-2.59,6.92-3,8.96v10.8c0,2.58,0.28,4.61,0.54,5.92H10.5c-0.25-1.41-0.5-3.42-0.5-5.92l0.02-11.09 c0.15-0.77,1.55-7.63,3.43-9.94l0.08-0.09c1.65-2.03,2.96-3.63,7.25-4.61c3.28-0.76,7.67-0.25,9.77,1.13 C33.79,13.6,35,22.23,35,27.17z">
+          </path>
+          <path fill="#01579b"
+            d="M17.165,17.283c5.217-0.055,9.391,0.283,9,6.011c-0.391,5.728-8.478,5.533-9.391,5.337 c-0.913-0.196-7.826-0.043-7.696-5.337C9.209,18,13.645,17.32,17.165,17.283z">
+          </path>
+          <path fill="#212121"
+            d="M40.739,37.38c-0.28,1.99-0.69,3.53-1.22,4.62h-2.43c0.25-0.19,1.13-1.11,1.67-4.9 c0.57-4-0.23-11.79-0.93-12.78c-0.4-0.4-2.63-0.8-4.37-0.89l0.1-1.99c1.04,0.05,4.53,0.31,5.71,1.49 C40.689,24.36,41.289,33.53,40.739,37.38z">
+          </path>
+          <path fill="#81d4fa"
+            d="M10.154,20.201c0.261,2.059-0.196,3.351,2.543,3.546s8.076,1.022,9.402-0.554 c1.326-1.576,1.75-4.365-0.891-5.267C19.336,17.287,12.959,16.251,10.154,20.201z">
+          </path>
+          <path fill="#212121"
+            d="M17.615,29.677c-0.502,0-0.873-0.03-1.052-0.069c-0.086-0.019-0.236-0.035-0.434-0.06 c-5.344-0.679-8.053-2.784-8.052-6.255c0.001-2.698,1.17-7.238,8.986-7.32l0.181-0.002c3.444-0.038,6.414-0.068,8.272,1.818 c1.173,1.191,1.712,3,1.647,5.53c-0.044,1.688-0.785,3.147-2.144,4.217C22.785,29.296,19.388,29.677,17.615,29.677z M17.086,17.973 c-7.006,0.074-7.008,4.023-7.008,5.321c-0.001,3.109,3.598,3.926,6.305,4.27c0.273,0.035,0.48,0.063,0.601,0.089 c0.563,0.101,4.68,0.035,6.855-1.732c0.865-0.702,1.299-1.57,1.326-2.653c0.051-1.958-0.301-3.291-1.073-4.075 c-1.262-1.281-3.834-1.255-6.825-1.222L17.086,17.973z">
+          </path>
+          <path fill="#e1f5fe"
+            d="M15.078,19.043c1.957-0.326,5.122-0.529,4.435,1.304c-0.489,1.304-7.185,2.185-7.185,0.652 C12.328,19.467,15.078,19.043,15.078,19.043z">
+          </path>
+        </svg>
+        <span class="susnow">AND/OR</span>
+        <span class="susplay">AND/OR</span>
+      </button>
+
+      <button class="sus" onclick="resetSelection()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="36px" height="36px">
+          <rect width="36" height="36" x="0" y="0" fill="#fdd835"></rect>
+          <path fill="#e53935"
+            d="M38.67,42H11.52C11.27,40.62,11,38.57,11,36c0-5,0-11,0-11s1.44-7.39,3.22-9.59 c1.67-2.06,2.76-3.48,6.78-4.41c3-0.7,7.13-0.23,9,1c2.15,1.42,3.37,6.67,3.81,11.29c1.49-0.3,5.21,0.2,5.5,1.28 C40.89,30.29,39.48,38.31,38.67,42z">
+          </path>
+          <path fill="#b71c1c"
+            d="M39.02,42H11.99c-0.22-2.67-0.48-7.05-0.49-12.72c0.83,4.18,1.63,9.59,6.98,9.79 c3.48,0.12,8.27,0.55,9.83-2.45c1.57-3,3.72-8.95,3.51-15.62c-0.19-5.84-1.75-8.2-2.13-8.7c0.59,0.66,3.74,4.49,4.01,11.7 c0.03,0.83,0.06,1.72,0.08,2.66c4.21-0.15,5.93,1.5,6.07,2.35C40.68,33.85,39.8,38.9,39.02,42z">
+          </path>
+          <path fill="#212121"
+            d="M35,27.17c0,3.67-0.28,11.2-0.42,14.83h-2C32.72,38.42,33,30.83,33,27.17 c0-5.54-1.46-12.65-3.55-14.02c-1.65-1.08-5.49-1.48-8.23-0.85c-3.62,0.83-4.57,1.99-6.14,3.92L15,16.32 c-1.31,1.6-2.59,6.92-3,8.96v10.8c0,2.58,0.28,4.61,0.54,5.92H10.5c-0.25-1.41-0.5-3.42-0.5-5.92l0.02-11.09 c0.15-0.77,1.55-7.63,3.43-9.94l0.08-0.09c1.65-2.03,2.96-3.63,7.25-4.61c3.28-0.76,7.67-0.25,9.77,1.13 C33.79,13.6,35,22.23,35,27.17z">
+          </path>
+          <path fill="#01579b"
+            d="M17.165,17.283c5.217-0.055,9.391,0.283,9,6.011c-0.391,5.728-8.478,5.533-9.391,5.337 c-0.913-0.196-7.826-0.043-7.696-5.337C9.209,18,13.645,17.32,17.165,17.283z">
+          </path>
+          <path fill="#212121"
+            d="M40.739,37.38c-0.28,1.99-0.69,3.53-1.22,4.62h-2.43c0.25-0.19,1.13-1.11,1.67-4.9 c0.57-4-0.23-11.79-0.93-12.78c-0.4-0.4-2.63-0.8-4.37-0.89l0.1-1.99c1.04,0.05,4.53,0.31,5.71,1.49 C40.689,24.36,41.289,33.53,40.739,37.38z">
+          </path>
+          <path fill="#81d4fa"
+            d="M10.154,20.201c0.261,2.059-0.196,3.351,2.543,3.546s8.076,1.022,9.402-0.554 c1.326-1.576,1.75-4.365-0.891-5.267C19.336,17.287,12.959,16.251,10.154,20.201z">
+          </path>
+          <path fill="#212121"
+            d="M17.615,29.677c-0.502,0-0.873-0.03-1.052-0.069c-0.086-0.019-0.236-0.035-0.434-0.06 c-5.344-0.679-8.053-2.784-8.052-6.255c0.001-2.698,1.17-7.238,8.986-7.32l0.181-0.002c3.444-0.038,6.414-0.068,8.272,1.818 c1.173,1.191,1.712,3,1.647,5.53c-0.044,1.688-0.785,3.147-2.144,4.217C22.785,29.296,19.388,29.677,17.615,29.677z M17.086,17.973 c-7.006,0.074-7.008,4.023-7.008,5.321c-0.001,3.109,3.598,3.926,6.305,4.27c0.273,0.035,0.48,0.063,0.601,0.089 c0.563,0.101,4.68,0.035,6.855-1.732c0.865-0.702,1.299-1.57,1.326-2.653c0.051-1.958-0.301-3.291-1.073-4.075 c-1.262-1.281-3.834-1.255-6.825-1.222L17.086,17.973z">
+          </path>
+          <path fill="#e1f5fe"
+            d="M15.078,19.043c1.957-0.326,5.122-0.529,4.435,1.304c-0.489,1.304-7.185,2.185-7.185,0.652 C12.328,19.467,15.078,19.043,15.078,19.043z">
+          </path>
+        </svg>
+        <span class="susnow">reset</span>
+        <span class="susplay">reset</span>
+      </button>
+    </div>
+    <p id="searchCondition">Now Search Condition: <span style="font-weight: bold; font-size: 30px;">AND</span></p>
+    <!-- Line to show current search condition -->
+  </div>
+
+  <hr>
+  <div class="selectText">召喚獸屬性</div>
+  <div class="options">
+    <table>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1000" type="checkbox" /><label
+              class="tgl-btn" text="水" for="option1000"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1001" type="checkbox" /><label
+              class="tgl-btn" text="火" for="option1001"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1002" type="checkbox" /><label
+              class="tgl-btn" text="木" for="option1002"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1003" type="checkbox" /><label
+              class="tgl-btn" text="光" for="option1003"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1004" type="checkbox" /><label
+              class="tgl-btn" text="暗" for="option1004"> </label></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <br />
+
+  <hr>
+  <div class="selectText">召喚獸種族</div>
+  <div class="options">
+    <table>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1005" type="checkbox" /><label
+              class="tgl-btn" text="神族" for="option1005"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1006" type="checkbox" /><label
+              class="tgl-btn" text="魔族" for="option1006"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1007" type="checkbox" /><label
+              class="tgl-btn" text="人族" for="option1007"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1008" type="checkbox" /><label
+              class="tgl-btn" text="獸族" for="option1008"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1009" type="checkbox" /><label
+              class="tgl-btn" text="龍族" for="option1009"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1010" type="checkbox" /><label
+              class="tgl-btn" text="妖精族" for="option1010"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1011" type="checkbox" /><label
+              class="tgl-btn" text="機械族" for="option1011"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1012" type="checkbox" /><label
+              class="tgl-btn" text="強化素材" for="option1012"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1013" type="checkbox" /><label
+              class="tgl-btn" text="進化素材" for="option1013"> </label></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <br />
+
+  <hr>
+  <div class="selectText">召喚獸稀有度</div>
+  <div class="options">
+    <table>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1014" type="checkbox" /><label
+              class="tgl-btn" text="1*" for="option1014"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1015" type="checkbox" /><label
+              class="tgl-btn" text="2*" for="option1015"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1016" type="checkbox" /><label
+              class="tgl-btn" text="3*" for="option1016"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1017" type="checkbox" /><label
+              class="tgl-btn" text="4*" for="option1017"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1018" type="checkbox" /><label
+              class="tgl-btn" text="5*" for="option1018"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1019" type="checkbox" /><label
+              class="tgl-btn" text="6*" for="option1019"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1020" type="checkbox" /><label
+              class="tgl-btn" text="7*" for="option1020"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1021" type="checkbox" /><label
+              class="tgl-btn" text="8*" for="option1021"> </label></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <br />
+
+  <hr>
+  <div class="selectText">符石轉化</div>
+  <div class="options">
+    <table>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option1" type="checkbox" /><label
+              class="tgl-btn" text="符石轉水" for="option1"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option2" type="checkbox" /><label
+              class="tgl-btn" text="符石轉火" for="option2"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option3" type="checkbox" /><label
+              class="tgl-btn" text="符石轉木" for="option3"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option4" type="checkbox" /><label
+              class="tgl-btn" text="符石轉光" for="option4"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option5" type="checkbox" /><label
+              class="tgl-btn" text="符石轉暗" for="option5"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option6" type="checkbox" /><label
+              class="tgl-btn" text="符石轉心" for="option6"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option7" type="checkbox" /><label
+              class="tgl-btn" text="五屬版面" for="option7"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option8" type="checkbox" /><label
+              class="tgl-btn" text="五屬心版面" for="option8"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option9" type="checkbox" /><label
+              class="tgl-btn" text="符石轉水強化" for="option9"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option10" type="checkbox" /><label
+              class="tgl-btn" text="符石轉火強化" for="option10"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option11" type="checkbox" /><label
+              class="tgl-btn" text="符石轉木強化" for="option11"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option12" type="checkbox" /><label
+              class="tgl-btn" text="符石轉光強化" for="option12"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option13" type="checkbox" /><label
+              class="tgl-btn" text="符石轉暗強化" for="option13"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option14" type="checkbox" /><label
+              class="tgl-btn" text="符石轉心強化" for="option14"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option15" type="checkbox" /><label
+              class="tgl-btn" text="水轉其他" for="option15"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option16" type="checkbox" /><label
+              class="tgl-btn" text="火轉其他" for="option16"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option17" type="checkbox" /><label
+              class="tgl-btn" text="木轉其他" for="option17"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option18" type="checkbox" /><label
+              class="tgl-btn" text="光轉其他" for="option18"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option19" type="checkbox" /><label
+              class="tgl-btn" text="暗轉其他" for="option19"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option20" type="checkbox" /><label
+              class="tgl-btn" text="心轉其他" for="option20"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option21" type="checkbox" /><label
+              class="tgl-btn" text="指定符石轉其他" for="option21"> </label></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <br />
+
+  <hr>
+  <div class="selectText">符石效果提升</div>
+  <div class="options">
+    <table>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option22" type="checkbox" /><label
+              class="tgl-btn" text="符石兼具水" for="option22"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option23" type="checkbox" /><label
+              class="tgl-btn" text="符石兼具火" for="option23"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option24" type="checkbox" /><label
+              class="tgl-btn" text="符石兼具木" for="option24"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option25" type="checkbox" /><label
+              class="tgl-btn" text="符石兼具光" for="option25"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option26" type="checkbox" /><label
+              class="tgl-btn" text="符石兼具暗" for="option26"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option27" type="checkbox" /><label
+              class="tgl-btn" text="符石兼具心" for="option27"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option28" type="checkbox" /><label
+              class="tgl-btn" text="符石效果提升" for="option28"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option29" type="checkbox" /><label
+              class="tgl-btn" text="強化珠效果提升" for="option29"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option30" type="checkbox" /><label
+              class="tgl-btn" text="水屬追打" for="option30"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option31" type="checkbox" /><label
+              class="tgl-btn" text="火屬追打" for="option31"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option32" type="checkbox" /><label
+              class="tgl-btn" text="木屬追打" for="option32"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option33" type="checkbox" /><label
+              class="tgl-btn" text="光屬追打" for="option33"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option34" type="checkbox" /><label
+              class="tgl-btn" text="暗屬追打" for="option34"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option35" type="checkbox" /><label
+              class="tgl-btn" text="無屬追打" for="option35"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option36" type="checkbox" /><label
+              class="tgl-btn" text="五屬追打" for="option36"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option37" type="checkbox" /><label
+              class="tgl-btn" text="自身追打" for="option37"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option38" type="checkbox" /><label
+              class="tgl-btn" text="全隊追打" for="option38"> </label></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <br />
+  <hr>
+  <div class="selectText">炸版</div>
+  <div class="options">
+    <table>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option39" type="checkbox" /><label
+              class="tgl-btn" text="引爆" for="option39"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option40" type="checkbox" /><label
+              class="tgl-btn" text="整版引爆" for="option40"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option41" type="checkbox" /><label
+              class="tgl-btn" text="直行引爆" for="option41"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option42" type="checkbox" /><label
+              class="tgl-btn" text="橫行引爆" for="option42"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option43" type="checkbox" /><label
+              class="tgl-btn" text="X型引爆" for="option43"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option44" type="checkbox" /><label
+              class="tgl-btn" text="多次引爆" for="option44"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option45" type="checkbox" /><label
+              class="tgl-btn" text="水符石引爆" for="option45"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option46" type="checkbox" /><label
+              class="tgl-btn" text="火符石引爆" for="option46"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option47" type="checkbox" /><label
+              class="tgl-btn" text="木符石引爆" for="option47"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option48" type="checkbox" /><label
+              class="tgl-btn" text="光符石引爆" for="option48"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option49" type="checkbox" /><label
+              class="tgl-btn" text="暗符石引爆" for="option49"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option50" type="checkbox" /><label
+              class="tgl-btn" text="心符石引爆" for="option50"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option51" type="checkbox" /><label
+              class="tgl-btn" text="水外符石引爆" for="option51"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option52" type="checkbox" /><label
+              class="tgl-btn" text="火外符石引爆" for="option52"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option53" type="checkbox" /><label
+              class="tgl-btn" text="木外符石引爆" for="option53"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option54" type="checkbox" /><label
+              class="tgl-btn" text="光外符石引爆" for="option54"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option55" type="checkbox" /><label
+              class="tgl-btn" text="暗外符石引爆" for="option55"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option56" type="checkbox" /><label
+              class="tgl-btn" text="心外符石引爆" for="option56"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option57" type="checkbox" /><label
+              class="tgl-btn" text="指定符石引爆" for="option57"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option58" type="checkbox" /><label
+              class="tgl-btn" text="指定符石外引爆" for="option58"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option59" type="checkbox" /><label
+              class="tgl-btn" text="移除" for="option59"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option60" type="checkbox" /><label
+              class="tgl-btn" text="整版移除" for="option60"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option61" type="checkbox" /><label
+              class="tgl-btn" text="直行移除" for="option61"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option62" type="checkbox" /><label
+              class="tgl-btn" text="橫行移除" for="option62"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option63" type="checkbox" /><label
+              class="tgl-btn" text="水符石移除" for="option63"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option64" type="checkbox" /><label
+              class="tgl-btn" text="火符石移除" for="option64"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option65" type="checkbox" /><label
+              class="tgl-btn" text="木符石移除" for="option65"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option66" type="checkbox" /><label
+              class="tgl-btn" text="光符石移除" for="option66"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option67" type="checkbox" /><label
+              class="tgl-btn" text="暗符石移除" for="option67"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option68" type="checkbox" /><label
+              class="tgl-btn" text="心符石移除" for="option68"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option69" type="checkbox" /><label
+              class="tgl-btn" text="指定符石移除" for="option69"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option70" type="checkbox" /><label
+              class="tgl-btn" text="指定符石外移除" for="option70"> </label></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <br />
+  <hr>
+  <div class="selectText">修飾版面</div>
+  <div class="options">
+    <table>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option71" type="checkbox" /><label
+              class="tgl-btn" text="人族符石製造" for="option71"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option72" type="checkbox" /><label
+              class="tgl-btn" text="獸族符石製造" for="option72"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option73" type="checkbox" /><label
+              class="tgl-btn" text="妖族符石製造" for="option73"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option74" type="checkbox" /><label
+              class="tgl-btn" text="龍族符石製造" for="option74"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option75" type="checkbox" /><label
+              class="tgl-btn" text="神族符石製造" for="option75"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option76" type="checkbox" /><label
+              class="tgl-btn" text="魔族符石製造" for="option76"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option77" type="checkbox" /><label
+              class="tgl-btn" text="機械族符石製造" for="option77"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option78" type="checkbox" /><label
+              class="tgl-btn" text="符石強化" for="option78"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option79" type="checkbox" /><label
+              class="tgl-btn" text="大幅轉版" for="option79"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option80" type="checkbox" /><label
+              class="tgl-btn" text="固定版面" for="option80"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option81" type="checkbox" /><label
+              class="tgl-btn" text="還原版面" for="option81"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option82" type="checkbox" /><label
+              class="tgl-btn" text="禁珠" for="option82"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option83" type="checkbox" /><label
+              class="tgl-btn" text="改變掉落機率" for="option83"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option84" type="checkbox" /><label
+              class="tgl-btn" text="天降強制掉落" for="option84"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option85" type="checkbox" /><label
+              class="tgl-btn" text="引爆強制掉落" for="option85"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option86" type="checkbox" /><label
+              class="tgl-btn" text="移除強制掉落" for="option86"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option87" type="checkbox" /><label
+              class="tgl-btn" text="增加符石" for="option87"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option88" type="checkbox" /><label
+              class="tgl-btn" text="記錄版面" for="option88"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option89" type="checkbox" /><label
+              class="tgl-btn" text="加護符石製造" for="option89"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option90" type="checkbox" /><label
+              class="tgl-btn" text="強制掉水" for="option90"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option91" type="checkbox" /><label
+              class="tgl-btn" text="強制掉火" for="option91"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option92" type="checkbox" /><label
+              class="tgl-btn" text="強制掉木" for="option92"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option93" type="checkbox" /><label
+              class="tgl-btn" text="強制掉光" for="option93"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option94" type="checkbox" /><label
+              class="tgl-btn" text="強制掉暗" for="option94"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option95" type="checkbox" /><label
+              class="tgl-btn" text="強制掉心" for="option95"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option96" type="checkbox" /><label
+              class="tgl-btn" text="強制掉直行屬性" for="option96"> </label></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <br />
+  <hr>
+  <div class="selectText">更改消除條件</div>
+  <div class="options">
+    <table>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option97" type="checkbox" /><label
+              class="tgl-btn" text="一消" for="option97"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option98" type="checkbox" /><label
+              class="tgl-btn" text="二消" for="option98"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option99" type="checkbox" /><label
+              class="tgl-btn" text="三消" for="option99"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option100" type="checkbox" /><label
+              class="tgl-btn" text="只能首消符石" for="option100"> </label></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <br />
+  <hr>
+  <div class="selectText">提升生存能力</div>
+  <div class="options">
+    <table>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option101" type="checkbox" /><label
+              class="tgl-btn" text="減傷" for="option101"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option102" type="checkbox" /><label
+              class="tgl-btn" text="硬減傷" for="option102"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option103" type="checkbox" /><label
+              class="tgl-btn" text="意志" for="option103"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option104" type="checkbox" /><label
+              class="tgl-btn" text="敵方減攻" for="option104"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option105" type="checkbox" /><label
+              class="tgl-btn" text="迴避" for="option105"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option106" type="checkbox" /><label
+              class="tgl-btn" text="回血" for="option106"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option107" type="checkbox" /><label
+              class="tgl-btn" text="我方傷害吸收" for="option107"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option108" type="checkbox" /><label
+              class="tgl-btn" text="敵方傷害吸收" for="option108"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option109" type="checkbox" /><label
+              class="tgl-btn" text="破防" for="option109"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option110" type="checkbox" /><label
+              class="tgl-btn" text="屬性剋制改變" for="option110"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option111" type="checkbox" /><label
+              class="tgl-btn" text="排珠" for="option111"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option112" type="checkbox" /><label
+              class="tgl-btn" text="延長轉珠時間" for="option112"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option113" type="checkbox" /><label
+              class="tgl-btn" text="反擊" for="option113"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option114" type="checkbox" /><label
+              class="tgl-btn" text="再爆發" for="option114"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option115" type="checkbox" /><label
+              class="tgl-btn" text="軌跡轉化" for="option115"> </label></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <br />
+  <hr>
+  <div class="selectText">砲擊傷害</div>
+  <div class="options">
+    <table>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option116" type="checkbox" /><label
+              class="tgl-btn" text="直傷" for="option116"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option117" type="checkbox" /><label
+              class="tgl-btn" text="破防直傷" for="option117"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option118" type="checkbox" /><label
+              class="tgl-btn" text="破強化直傷" for="option118"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option119" type="checkbox" /><label
+              class="tgl-btn" text="破拼圖直傷" for="option119"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option120" type="checkbox" /><label
+              class="tgl-btn" text="破攻前直傷" for="option120"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option121" type="checkbox" /><label
+              class="tgl-btn" text="破固定連擊直傷" for="option121"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option122" type="checkbox" /><label
+              class="tgl-btn" text="破連擊相等直傷" for="option122"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option123" type="checkbox" /><label
+              class="tgl-btn" text="無視技能直傷" for="option123"> </label></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <br />
+  <hr>
+  <div class="selectText">提升傷害</div>
+  <div class="options">
+    <table>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option124" type="checkbox" /><label
+              class="tgl-btn" text="增傷" for="option124"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option125" type="checkbox" /><label
+              class="tgl-btn" text="界王拳" for="option125"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option126" type="checkbox" /><label
+              class="tgl-btn" text="敵方受傷增加" for="option126"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option127" type="checkbox" /><label
+              class="tgl-btn" text="攻擊轉屬" for="option127"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option128" type="checkbox" /><label
+              class="tgl-btn" text="增回" for="option128"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option129" type="checkbox" /><label
+              class="tgl-btn" text="我方攻擊力吸收" for="option129"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option130" type="checkbox" /><label
+              class="tgl-btn" text="共鳴" for="option130"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option131" type="checkbox" /><label
+              class="tgl-btn" text="對人族增傷" for="option131"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option132" type="checkbox" /><label
+              class="tgl-btn" text="對獸族增傷" for="option132"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option133" type="checkbox" /><label
+              class="tgl-btn" text="對妖族增傷" for="option133"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option134" type="checkbox" /><label
+              class="tgl-btn" text="對龍族增傷" for="option134"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option135" type="checkbox" /><label
+              class="tgl-btn" text="對神族增傷" for="option135"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option136" type="checkbox" /><label
+              class="tgl-btn" text="對魔族增傷" for="option136"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option137" type="checkbox" /><label
+              class="tgl-btn" text="對機械族增傷" for="option137"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option138" type="checkbox" /><label
+              class="tgl-btn" text="增加Combo" for="option138"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option139" type="checkbox" /><label
+              class="tgl-btn" text="增加Ex.Combo" for="option139"> </label></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <br />
+  <hr>
+  <div class="selectText">特殊效果</div>
+  <div class="options">
+    <table>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option140" type="checkbox" /><label
+              class="tgl-btn" text="延遲" for="option140"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option141" type="checkbox" /><label
+              class="tgl-btn" text="減CD" for="option141"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option142" type="checkbox" /><label
+              class="tgl-btn" text="回復EP" for="option142"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option143" type="checkbox" /><label
+              class="tgl-btn" text="附加消除" for="option143"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option144" type="checkbox" /><label
+              class="tgl-btn" text="龍脈儀蓄能" for="option144"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option145" type="checkbox" /><label
+              class="tgl-btn" text="行動值提升" for="option145"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option146" type="checkbox" /><label
+              class="tgl-btn" text="刷新護盾" for="option146"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option147" type="checkbox" /><label
+              class="tgl-btn" text="刷新格擋" for="option147"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option148" type="checkbox" /><label
+              class="tgl-btn" text="隨時關閉" for="option148"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option149" type="checkbox" /><label
+              class="tgl-btn" text="變身" for="option149"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option150" type="checkbox" /><label
+              class="tgl-btn" text="合體" for="option150"> </label></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <br />
+  <hr>
+  <div class="selectText">附上狀態</div>
+  <div class="options">
+    <table>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option151" type="checkbox" /><label
+              class="tgl-btn" text="多重左上狀態" for="option151"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option152" type="checkbox" /><label
+              class="tgl-btn" text="頭像狀態" for="option152"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option153" type="checkbox" /><label
+              class="tgl-btn" text="敵身狀態" for="option153"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option154" type="checkbox" /><label
+              class="tgl-btn" text="亢奮狀態" for="option154"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option155" type="checkbox" /><label
+              class="tgl-btn" text="疲憊狀態" for="option155"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option156" type="checkbox" /><label
+              class="tgl-btn" text="暴擊狀態" for="option156"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option157" type="checkbox" /><label
+              class="tgl-btn" text="暴怒狀態" for="option157"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option158" type="checkbox" /><label
+              class="tgl-btn" text="無法行動" for="option158"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option159" type="checkbox" /><label
+              class="tgl-btn" text="凍結敵方" for="option159"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option160" type="checkbox" /><label
+              class="tgl-btn" text="點燃敵方" for="option160"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option161" type="checkbox" /><label
+              class="tgl-btn" text="石化敵方" for="option161"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option162" type="checkbox" /><label
+              class="tgl-btn" text="電擊敵方" for="option162"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option163" type="checkbox" /><label
+              class="tgl-btn" text="寄生敵方" for="option163"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option164" type="checkbox" /><label
+              class="tgl-btn" text="敵方中毒" for="option164"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option165" type="checkbox" /><label
+              class="tgl-btn" text="敵附烈毒" for="option165"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option166" type="checkbox" /><label
+              class="tgl-btn" text="魅惑敵方" for="option166"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option167" type="checkbox" /><label
+              class="tgl-btn" text="暈擊敵方" for="option167"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option168" type="checkbox" /><label
+              class="tgl-btn" text="冥控敵方" for="option168"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option169" type="checkbox" /><label
+              class="tgl-btn" text="敵方睡眠" for="option169"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option170" type="checkbox" /><label
+              class="tgl-btn" text="敵附刀傷" for="option170"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option171" type="checkbox" /><label
+              class="tgl-btn" text="敵方轉水" for="option171"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option172" type="checkbox" /><label
+              class="tgl-btn" text="敵方轉火" for="option172"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option173" type="checkbox" /><label
+              class="tgl-btn" text="敵方轉木" for="option173"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option174" type="checkbox" /><label
+              class="tgl-btn" text="敵方轉光" for="option174"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option175" type="checkbox" /><label
+              class="tgl-btn" text="敵方轉暗" for="option175"> </label></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <br />
+  <hr>
+  <div class="selectText">解盾能力</div>
+  <div class="options">
+    <table>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option176" type="checkbox" /><label
+              class="tgl-btn" text="解鎖" for="option176"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option177" type="checkbox" /><label
+              class="tgl-btn" text="防鎖" for="option177"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option178" type="checkbox" /><label
+              class="tgl-btn" text="防毒" for="option178"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option179" type="checkbox" /><label
+              class="tgl-btn" text="防爆" for="option179"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option180" type="checkbox" /><label
+              class="tgl-btn" text="防反擊" for="option180"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option181" type="checkbox" /><label
+              class="tgl-btn" text="無視燃燒" for="option181"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option182" type="checkbox" /><label
+              class="tgl-btn" text="無視黏腐" for="option182"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option183" type="checkbox" /><label
+              class="tgl-btn" text="無視暴風" for="option183"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option184" type="checkbox" /><label
+              class="tgl-btn" text="無視電擊" for="option184"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option185" type="checkbox" /><label
+              class="tgl-btn" text="無視射擊" for="option185"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option186" type="checkbox" /><label
+              class="tgl-btn" text="無視瘴氣" for="option186"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option187" type="checkbox" /><label
+              class="tgl-btn" text="無視黑洞" for="option187"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option188" type="checkbox" /><label
+              class="tgl-btn" text="無視一步一傷" for="option188"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option189" type="checkbox" /><label
+              class="tgl-btn" text="無視灼熱地型" for="option189"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option190" type="checkbox" /><label
+              class="tgl-btn" text="無視腐化" for="option190"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option191" type="checkbox" /><label
+              class="tgl-btn" text="無視敵身減傷" for="option191"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option192" type="checkbox" /><label
+              class="tgl-btn" text="無視減傷抗性" for="option192"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option193" type="checkbox" /><label
+              class="tgl-btn" text="無視紅綠燈" for="option193"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option194" type="checkbox" /><label
+              class="tgl-btn" text="黑白還原" for="option194"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option195" type="checkbox" /><label
+              class="tgl-btn" text="碎裂還原" for="option195"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option196" type="checkbox" /><label
+              class="tgl-btn" text="無視移形換影" for="option196"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option197" type="checkbox" /><label
+              class="tgl-btn" text="解除暴風" for="option197"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option198" type="checkbox" /><label
+              class="tgl-btn" text="解除射擊" for="option198"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option199" type="checkbox" /><label
+              class="tgl-btn" text="解除結界地形" for="option199"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option200" type="checkbox" /><label
+              class="tgl-btn" text="解除隱身" for="option200"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option201" type="checkbox" /><label
+              class="tgl-btn" text="解除疲憊" for="option201"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option202" type="checkbox" /><label
+              class="tgl-btn" text="解除休眠" for="option202"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option203" type="checkbox" /><label
+              class="tgl-btn" text="解除風壓" for="option203"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option204" type="checkbox" /><label
+              class="tgl-btn" text="解除麻痺" for="option204"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option205" type="checkbox" /><label
+              class="tgl-btn" text="無視拼圖盾" for="option205"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option206" type="checkbox" /><label
+              class="tgl-btn" text="無視攻前盾" for="option206"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option207" type="checkbox" /><label
+              class="tgl-btn" text="無視強化盾" for="option207"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option208" type="checkbox" /><label
+              class="tgl-btn" text="無視二屬盾" for="option208"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option209" type="checkbox" /><label
+              class="tgl-btn" text="無視三屬盾" for="option209"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option210" type="checkbox" /><label
+              class="tgl-btn" text="無視四屬盾" for="option210"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option211" type="checkbox" /><label
+              class="tgl-btn" text="無視五屬盾" for="option211"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option212" type="checkbox" /><label
+              class="tgl-btn" text="無視固定連擊盾" for="option212"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option213" type="checkbox" /><label
+              class="tgl-btn" text="無視連擊相等盾" for="option213"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option214" type="checkbox" /><label
+              class="tgl-btn" text="無視反首消盾" for="option214"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option215" type="checkbox" /><label
+              class="tgl-btn" text="無視首消全版盾" for="option215"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option216" type="checkbox" /><label
+              class="tgl-btn" text="無視數字盾" for="option216"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option217" type="checkbox" /><label
+              class="tgl-btn" text="無視十字盾" for="option217"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option218" type="checkbox" /><label
+              class="tgl-btn" text="無視攻擊次數盾" for="option218"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option219" type="checkbox" /><label
+              class="tgl-btn" text="無視追擊零化" for="option219"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option220" type="checkbox" /><label
+              class="tgl-btn" text="無視連擊法印" for="option220"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option221" type="checkbox" /><label
+              class="tgl-btn" text="風化符石處理" for="option221"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option222" type="checkbox" /><label
+              class="tgl-btn" text="凍結符石處理" for="option222"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option223" type="checkbox" /><label
+              class="tgl-btn" text="弱化符石處理" for="option223"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option224" type="checkbox" /><label
+              class="tgl-btn" text="電擊符石處理" for="option224"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option225" type="checkbox" /><label
+              class="tgl-btn" text="石化符石處理" for="option225"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option226" type="checkbox" /><label
+              class="tgl-btn" text="化血符石處理" for="option226"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option227" type="checkbox" /><label
+              class="tgl-btn" text="凝結符石處理" for="option227"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option228" type="checkbox" /><label
+              class="tgl-btn" text="爆破炸彈處理" for="option228"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option229" type="checkbox" /><label
+              class="tgl-btn" text="泡沫符石處理" for="option229"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option230" type="checkbox" /><label
+              class="tgl-btn" text="我方減攻" for="option230"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option231" type="checkbox" /><label
+              class="tgl-btn" text="我方減回" for="option231"> </label></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option232" type="checkbox" /><label
+              class="tgl-btn" text="我方扣血" for="option232"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option233" type="checkbox" /><label
+              class="tgl-btn" text="限制成員攻擊" for="option233"> </label></div>
+        </td>
+        <td>
+          <div class="checkbox-wrapper-10"><input class="tgl tgl-flip" id="option234" type="checkbox" /><label
+              class="tgl-btn" text="我方受傷增加" for="option234"> </label></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <hr>
+  <div class="footer">
+    <p>Developed by Buffett, Panda, IFIF, bbeafvy</p>
+    <p><a href="https://tos.fandom.com/zh/wiki/%E4%B8%BB%E5%8B%95%E6%8A%80%E5%88%97%E8%A1%A8">Resources</a> | <a
+        href="https://github.com/Buffett111">GitHub</a></p>
+  </div>
+</div>
+<script src="script.js"></script>
+<script src="login.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的最愛</title>
+  <link rel="stylesheet" href="style.css"> <!-- Link to external CSS file -->
+  <link rel="stylesheet" href="resultStyle.css">
+</head>
+<div class="mainText">
+
+  <body>
+    <div class="header">
+      <div class="left">
+        <img src="images/ourlogo.png" alt="Logo" id="logo">
+        <h1>神魔技能搜尋器 - 我的最愛</h1>
+      </div>
+      <div class="right">
+        <button class="defaultButton" role="button" onclick="window.location.href='index.html'">返回首頁</button>
+        <!-- Greeting section copied from index.html -->
+        <div id="greeting">你好，<span id="usernameDisplay"></span></div>
+      </div>
+    </div>
+
+    <br>
+
+    <body class="result-page">
+      <div class="mainText">
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+        <button class="coolButton" role="button" onclick="window.location.href='index.html'">回到首頁</button>
+        <div id="fixedBoard" style="display: none; position: absolute;z-index: 2;" onmouseleave="clearBoard()"> </div>
+
+        <div id="results"></div>
+
+        <script src="script.js"></script>
+        <script src="script_fav.js"></script>
+        <script>
+          var resultsDiv = document.getElementById('results');
+        </script>
+        <script src="board.js"></script>
+      </div>
+
+    </body>
+
+    <div class="footer">
+      <p>Developed by Buffett, Panda, IFIF, bbeafvy</p>
+      <p><a href="https://tos.fandom.com/zh/wiki/%E4%B8%BB%E5%8B%95%E6%8A%80%E5%88%97%E8%A1%A8">Resources</a> | <a
+          href="https://github.com/Buffett111">GitHub</a></p>
+    </div>
+
+
+    <br>
+</div>
+
+</html>

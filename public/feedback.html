@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>神魔技能搜尋器 - 撰寫回饋</title>
+  <link rel="stylesheet" href="style.css"> <!-- Link to external CSS file -->
+</head>
+
+<body>
+
+  <div class="header">
+    <div class="left">
+      <img src="images/ourlogo.png" alt="Logo" id="logo">
+      <h1>神魔技能搜尋器 - 撰寫回饋</h1>
+    </div>
+    <div class="right">
+      <button class="defaultButton" role="button" onclick="window.location.href='index.html'">返回首頁</button>
+      <button id="logoutButton" onclick="logout()" style="display: none;">登出</button> <!-- Logout button -->
+      <div id="greeting">你好，<span id="usernameDisplay"></span></div>
+    </div>
+  </div>
+
+  <br><br><br><br><br><br><br>
+
+
+  <form class="feedback-form" onsubmit="submitFeedback(event)">
+    <!--
+    <input type="text" id="username" name="username" placeholder="用戶名">
+    -->
+    <input type="text" id="subject" name="subject" placeholder="主題">
+    <textarea id="content" name="content" placeholder="內容" style="height:200px"></textarea>
+    <input type="submit" value="提交">
+  </form>
+
+  <div class="footer">
+    <p>Developed by Buffett, Panda, IFIF, bbeafvy</p>
+    <p><a href="https://tos.fandom.com/zh/wiki/%E4%B8%BB%E5%8B%95%E6%8A%80%E5%88%97%E8%A1%A8">Resources</a> | <a
+        href="https://github.com/Buffett111">GitHub</a></p>
+  </div>
+  <script src="script.js"></script>
+  <script src="login.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      fetch('/check-session')
+        .then(response => response.json())
+        .then(data => {
+          if (data.loggedIn) {
+            document.getElementById("greeting").textContent = `你好，${data.nickname}`;
+          }
+        });
+    });
+  </script>
+</body>
+
+</html>
