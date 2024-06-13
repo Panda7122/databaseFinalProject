@@ -222,54 +222,24 @@ app.get("/search", (req, res) => {
   if (query) {
     // Initialize SQL queries and parameters
     let sql1 = `
-    SELECT * , skill.name as skill_name 
-    FROM ( (SELECT * FROM card WHERE card.name LIKE ?) as T
-    NATURAL JOIN have_skill 
-    JOIN skill ON have_skill.skill_id = skill.skill_id)
+    SELECT DISTINCT *
+    FROM card_skill_view2
+    where name LIKE ? or card_id = ? or series_name LIKE ?
+    GROUP BY card_id,skill_name
+    ORDER BY card_id ASC, skill_id ASC;
     `;
     // Trim and remove newline characters
     sql1 = sql1.replace(/\s+/g, " ").trim();
-    let params1 = [`%${query}%`];
+    let params1 = [`%${query}%`, isNaN(query) ? 0 : query, `%${query}%`];
 
-    //let sql2 = `SELECT * FROM card WHERE race LIKE ?`;
-    let sql2 = `
-    SELECT *, skill.name as skill_name 
-    FROM ( (SELECT * FROM card WHERE card.race LIKE ?) as T
-    NATURAL JOIN have_skill
-    JOIN skill ON have_skill.skill_id = skill.skill_id)
-    `;
-    let params2 = [`%${query}%`];
-
-    //let sql3 = `SELECT * FROM card WHERE card_id = ?`;
-    let sql3 = `
-    SELECT *, skill.name as skill_name 
-    FROM ( (SELECT * FROM card WHERE card_id = ?) as T
-    NATURAL JOIN have_skill
-    JOIN skill ON have_skill.skill_id = skill.skill_id)
-    `;
-    //if query is number param3=query else param3=0
-    let param3 = isNaN(query) ? 0 : query;
 
     // Execute first query
     executeQuery(sql1, params1)
       .then((nameQueryResults) => {
         // Execute second query inside the first query's resolution
-        executeQuery(sql2, params2)
-          .then((raceQueryResults) => {
-            executeQuery(sql3, param3).then((idQueryResults) => {
-              res.json({
-                nameResults: nameQueryResults,
-                raceResults: raceQueryResults,
-                IdResults: idQueryResults,
-              });
-            });
-            // Send both results together as an array or an object
-            // res.json({ nameResults: rows1, raceResults: rows2 });
-          })
-          .catch((err) => {
-            console.error(err);
-            res.status(500).send("Database query error on race search");
-          });
+        res.json({
+          nameResults: nameQueryResults,
+        })
       })
       .catch((err) => {
         console.error(err);
@@ -281,19 +251,6 @@ app.get("/search", (req, res) => {
     // extract option in res.query
     //data is json object at data/Data.json
     let data = require("./data/Data.json");
-
-    // let sql = `
-    //   SELECT
-    //     *,
-    //     card.name as c_name
-    //   FROM
-    //     card
-    //   NATURAL JOIN
-    //     have_skill
-    //   NATURAL JOIN
-    //     (SELECT skill_id,name as s_name FROM have_tag natural join tag) AS subquery
-    //   WHERE`;
-    let sql = `SELECT  *,card.name as c_name FROM card NATURAL JOIN have_skill NATURAL JOIN (SELECT distinct skill_id,name as s_name FROM have_tag natural join tag) AS subquery WHERE`;
     var searchMode = req.query.searchMode;
     console.log(searchMode);
     var invalid = false;
@@ -435,69 +392,17 @@ app.get("/search", (req, res) => {
     let sql_fin = "";
     // if (searchMode === "OR") {
     sql_fin = `
-
-      SELECT DISTINCT card_id,c_name,race,star,attribute,description,skill_name
-      FROM card_skill_view
+      SELECT DISTINCT *
+      FROM card_skill_view2
       WHERE ${conditionString}
       GROUP BY card_id,skill_name
       `;
     if (searchMode === "AND" && s_nameI.length > 0) {
       sql_fin = sql_fin + 'HAVING COUNT(DISTINCT(tag_name))=' + s_nameI.length + '\n'
     }
-    sql_fin = sql_fin + 'ORDER BY card_id, skill_id;'
+    sql_fin = sql_fin + 'ORDER BY card_id ASC, skill_id ASC;'
     console.log(sql_fin)
-    // } else {
-    //   // Handle the AND case for tags specifically
-    //   let andTagConditions = s_nameI
-    //     .map(
-    //       (sn) => `
-    //     card_id in (
-    //       SELECT card_id
-    //       FROM card_skill_view as c2
-    //       WHERE card_skill_view.c_name = c2.c_name
-    //         AND c2.tag_name = '${sn}'
-    //     )
-    //   `
-    //     )
-    //     .join(" AND ");
-    //   console.log("andtag" + andTagConditions);
-    //   sql_fin = `
-    //   SELECT DISTINCT card_id,c_name,race,star,attribute,description,skill_name
-    //   FROM card_skill_view
-    //   WHERE ${attributeI.length > 0 ? `(${attributeConditions}) ` : ""}
-    //         ${(attributeI.length > 0 && raceI.length > 0) ||
-    //       (attributeI.length > 0 && starI.length > 0) ||
-    //       (attributeI.length > 0 && andTagConditions.length > 0)
-    //       ? `AND`
-    //       : ""
-    //     }
 
-    //         ${raceI.length > 0 ? ` (${raceConditions})` : ""}
-
-    //         ${(raceI.length > 0 && starI.length > 0) ||
-    //       (raceI.length > 0 && andTagConditions.length > 0)
-    //       ? `AND`
-    //       : ""
-    //     }
-    //         ${starI.length > 0 ? ` (${starConditions})` : ""}
-
-    //         ${starI.length > 0 && andTagConditions.length > 0 ? `AND` : ""}
-    //         ${andTagConditions.length > 0 ? `${andTagConditions}` : ""};
-    //   `;
-    // }
-    // let sql_fin = `   //OLD
-    // SELECT DISTINCT card.*, card.name as c_name, skill.*
-    // FROM card
-    // JOIN have_skill ON card.card_id = have_skill.card_id
-    // JOIN skill ON have_skill.skill_id = skill.skill_id
-    // JOIN (
-    //     SELECT DISTINCT have_tag.skill_id, tag.name as s_name
-    //     FROM have_tag
-    //     JOIN tag ON have_tag.tag_id = tag.tag_id
-    // ) AS subquery ON skill.skill_id = subquery.skill_id
-    // WHERE ${conditionString};
-    // `;
-    // 移除換行符並執行查詢
 
 
     sql_fin = sql_fin.replace(/\n/g, " ");
@@ -509,15 +414,7 @@ app.get("/search", (req, res) => {
         console.error(err);
         res.status(500).send("Database query error");
       });
-    // executeQuery(sql_tmp, [])
-    //   .then((rows) => {
-    //     res.json(rows);
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //     res.status(500).send("Database query error");
-    //   });
-    //res.status(400).send('Invalid query');
+
   }
 });
 

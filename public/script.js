@@ -187,17 +187,22 @@ function renderResult(result, resultsDiv) {
       cardNameText.appendChild(iconRace);
       cardNameText.appendChild(iconStar);
       cardNameText.innerHTML =
-        cardNameText.innerHTML + (result.c_name || result.name || "undefined");
+        cardNameText.innerHTML + (result.name || "undefined");
+      console.log(result)
       cardNameText.style.backgroundColor =
         TitleColor[result.attribute].background;
       cardNameText.style.color = TitleColor[result.attribute].text;
 
       var skillname = document.createElement("p");
       skillname.setAttribute("class", "tooltipSkillName");
-      skillname.innerHTML = result.skill_name + "<br>";
+      skillname.innerHTML = result.skill_name + ' ' + '<span style="font-size:15px;color:red;">' + result.charge + ':' + (result.charge_time >= 0 ? result.charge_time : '-') + '</span>' + "<br>";
 
       var contentText = document.createElement("p");
       contentText.setAttribute("class", "tooltipContent");
+      var series = document.createElement("div");
+      series.setAttribute("class", "tooltipSeries");
+      series.innerHTML = result.series_name + "<br>";
+
 
       var content = result.description
         ? result.description.replace(/\n/g, "<br>")
@@ -206,71 +211,12 @@ function renderResult(result, resultsDiv) {
         /board{(\d+)}([^<]+)/g,
         "<span class='fixed_board_label', id=\"fixed_board_label_$1\" onmouseenter='showBoard($1, event)' onmouseleave='clearBoard()'>$2</span>"
       );
-      // div.appendChild(iconAttribute);
-      // div.appendChild(iconRace);
-      // div.appendChild(iconStar);
-      // div.appendChild(cardNameText);
       tooltipText.appendChild(cardNameText);
       tooltipText.appendChild(skillname);
       tooltipText.appendChild(contentText);
-      // } else {
-      //   // img.src =
-      //   //   "https://tinghan33704.com/tos_tool_data/img/monster/10622.png";
-      //   // img.onclick = function () {
-      //   //   window.open(
-      //   //     "https://tos.fandom.com/zh/wiki/%E8%8E%AB%E8%8E%89",
-      //   //     "_blank"
-      //   //   );
-      //   // };
-      //   // tooltipText.innerHTML = result.description;
-      //   img.src =
-      //     "https://tinghan33704.com/tos_tool_data/img/monster/" +
-      //     result.card_id +
-      //     ".png";
-      //   img.onclick = function () {
-      //     if (currentTooltip && this === currentImage) {
-      //       // currentTooltip.style.display = "none";
-      //       currentTooltip = null;
-      //       currentImage = null;
-      //     } else {
-      //       if (currentTooltip) {
-      //         currentTooltip.style.display = "none";
-      //       }
-      //       tooltipText.style.display = "block";
-      //       currentTooltip = tooltipText;
-      //       currentImage = this;
-      //     }
-      //   };
+      tooltipText.appendChild(series);
 
-      //   var iconStar = document.createElement("img");
-      //   iconStar.src = `./icon/icon_${result.star}.png`;
-      //   var iconRace = document.createElement("img");
-      //   iconRace.src = getRaceIconPath(result.race);
-      //   var iconAttribute = document.createElement("img");
-      //   iconAttribute.src = getAttributeIconPath(result.attribute);
 
-      //   var cardNameText = document.createElement("h3");
-      //   cardNameText.textContent = result.c_name || result.name || "undefined";
-
-      //   tooltipText.appendChild(iconAttribute);
-      //   tooltipText.appendChild(iconRace);
-      //   tooltipText.appendChild(iconStar);
-      //   tooltipText.appendChild(cardNameText);
-
-      //   var contentText = document.createElement("p");
-      //   var content =
-      //     result.skill_name +
-      //     "<br>" +
-      //     (result.description
-      //       ? result.description.replace(/\n/g, "<br>")
-      //       : "沒有技能");
-      //   contentText.innerHTML = content.replace(
-      //     /board{(\d+)}\S([^<]+)/g,
-      //     "<span class='fixed_board_label', id=\"fixed_board_label_$1\" onmouseenter='showBoard($1, event)' onmouseleave='clearBoard()'>$2</span>"
-      //   );
-
-      //   tooltipText.appendChild(contentText);
-      // }
 
       resultDiv.appendChild(img);
       resultsDiv.appendChild(tooltipText);
@@ -314,40 +260,6 @@ function renderResult(result, resultsDiv) {
         .catch((error) => {
           console.error("Error:", error);
         });
-      // 檢查用戶是否已登入
-      /*
-      fetch("/check-session")
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.loggedIn) {
-            var addButton = document.createElement("button");
-            addButton.textContent = "新增到我的最愛";
-            addButton.onclick = function () {
-              // 在這裡實現新增卡片到用戶收藏的邏輯
-              // 例如，發送 POST 請求到服務器的相關端點
-              fetch("/add-card", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ cardId: result.card_id }),
-              })
-                .then((response) => response.json())
-                .then((data) => {
-                  if (data.success) {
-                    console.log("卡片已新增到收藏。");
-                  } else {
-                    console.error("新增卡片失敗。");
-                  }
-                })
-                .catch((error) => {
-                  console.error("新增卡片過程中出現錯誤:", error);
-                });
-            };
-            tooltipText.appendChild(addButton);
-          }
-        });
-        */
     })
     .catch((error) => {
       console.error("Error:", error);
